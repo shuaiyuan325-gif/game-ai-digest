@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.tgz
+*.zip
+.env
+.env.*
+!.env.example
+config.local.json
+personal/
+knowledge/
+.game-ai-digest/
+.game-ai-digest-install-backups/
+*.log

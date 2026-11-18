@@ -1,0 +1,5 @@
+- insert:
+    - id: game-ai-digest
+      name: dsh-plugin-game-ai-digest
+      config:
+        archiveRoot: ''

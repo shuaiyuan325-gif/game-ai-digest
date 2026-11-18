@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+const source=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+test('安装器复制完整技能；升级需要明确选项且保留旧文件备份',async t=>{
+  const project=await fs.mkdtemp(path.join(os.tmpdir(),'game-ai-digest-test-'));
+  t.after(async()=>{assert.equal(path.dirname(path.resolve(project)),path.resolve(os.tmpdir()));assert.ok(path.basename(project).startsWith('game-ai-digest-test-'));await fs.rm(project,{recursive:true,force:true});});
+  const args=[path.join(source,'scripts/install-skill.mjs'),'--agent','claude','--project',project];
+  execFileSync(process.execPath,args);
+  const target=path.join(project,'.claude/skills/game-ai-digest');
+  await fs.access(path.join(target,'references/research.md'));await fs.access(path.join(target,'scripts/archive.mjs'));
+  await fs.writeFile(path.join(target,'old-marker.txt'),'preserve old install');
+  assert.throws(()=>execFileSync(process.execPath,args,{stdio:'pipe'}));
+  execFileSync(process.execPath,[...args,'--upgrade','true']);
+  const backups=await fs.readdir(path.join(project,'.game-ai-digest-install-backups'));
+  assert.equal(backups.length,1);assert.equal(await fs.readFile(path.join(project,'.game-ai-digest-install-backups',backups[0],'old-marker.txt'),'utf8'),'preserve old install');
+  await assert.rejects(fs.access(path.join(target,'old-marker.txt')));
+});

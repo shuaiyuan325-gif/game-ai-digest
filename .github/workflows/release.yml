@@ -1,0 +1,25 @@
+name: Prepare draft release
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test tests/archive.test.mjs tests/adapter.test.mjs tests/installer.test.mjs
+      - run: node scripts/check.mjs
+      - run: node scripts/build.mjs
+      - run: node scripts/verify-artifacts.mjs
+      - name: Create versioned draft with installation packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('package.json')).version")
+          TAG="v$VERSION"
+          gh release create "$TAG" dist/*.zip dist/*.tgz dist/SHA256SUMS.txt --draft --title "Game AI Digest $TAG" --target "$GITHUB_SHA" --notes-file docs/release-notes.md

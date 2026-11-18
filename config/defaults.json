@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "archiveRoot": null,
+  "language": "zh-CN",
+  "timezone": "Asia/Shanghai",
+  "focus": ["game"],
+  "schedule": { "enabled": false, "time": "09:00" },
+  "archivePolicy": "explicit-selection-after-reading"
+}

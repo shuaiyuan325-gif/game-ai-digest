@@ -1,0 +1,12 @@
+{
+  "name": "dsh-plugin-game-ai-digest",
+  "version": "0.1.0",
+  "description": "游戏优先的全球 AI 日报、确认后分类归档与主题检索",
+  "type": "module",
+  "main": "index.mjs",
+  "files": ["index.mjs", "adapter.mjs", "cordis.patch.yml", "skill", "README.md"],
+  "engines": { "node": ">=24.9.0", "dsh": ">=0.2.2-rc.3 <0.2.3" },
+  "peerDependencies": { "@deepseek-ai/dsh-tools": ">=0.2.2-rc.3 <0.2.3", "@deepseek-ai/schemastery": "*" },
+  "peerDependenciesMeta": { "@deepseek-ai/dsh-tools": { "optional": true }, "@deepseek-ai/schemastery": { "optional": true } },
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+}
